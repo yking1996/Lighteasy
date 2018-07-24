@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <title>setting_frame</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <style>
+            html,
+            body {
+                height: 100%;
+                background: #f0f0f0;
+            }
+            
+            .h1 {
+                height: 1px;
+                margin-left: 15px;
+                background: #f0f0f0;
+            }
+            
+            .h10 {
+                height: 10px;
+                background: #f0f0f0;
+            }
+            
+            section {
+                background-color: #fff;
+            }
+            
+            section>div {
+                height: 50px;
+                line-height: 50px;
+                padding-left: 15px;
+            }
+            
+            .arrow {
+                float: right;
+                width: 16px;
+                padding: 17px 15px 15px 0;
+            }
+            
+            .item-hov {
+                background-color: #EAEAEA;
+            }
+            
+            #cacheSize {
+                float: right;
+                margin-right: 15px;
+            }
+        </style>
+    </head>
+
+    <body>
+            <div class="h10"></div>
+        <section>
+            <div class="h1"></div>
+            <div tapmode="item-hov" onclick="fnOpenFeedBackWin();">
+                <span>意见反馈</span>
+                <img src="../image/arrow.png" class="arrow">
+            </div>
+            <div class="h1"></div>
+            <div  tapmode="item-hov" onclick="fnOpenAboutWin();">
+                <span>关于我们</span>
+                <img src="../image/arrow.png" class="arrow">
+            </div>
+        </section>
+            <div class="h10"></div>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript">
+        function fnOpenFeedBackWin(){
+            api.openWin({
+                name: 'feedback',
+                url: 'feedback.html',
+                pageParam: {
+                    key:''
+                }
+            });
+        };
+
+        function fnOpenAboutWin(){
+            api.openWin({
+                name: 'about',
+                url: 'about.html',
+                pageParam: {
+                    key:''
+                }
+            });
+        };
+    </script>
+
+</html>

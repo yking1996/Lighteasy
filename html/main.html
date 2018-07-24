@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>main</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+	<style>
+	html,body{
+		height: 100%;
+	}
+	@font-face {  
+        font-family: 'Yapi';  
+        src: url(../image/Yapi.ttf)
+       } 
+	body{
+		display: -webkit-box; 
+		display: -webkit-flex; 
+		display: flex;/*兼容各种浏览器*/
+		-webkit-box-orient: 
+		vertical; 
+		-webkit-flex-flow: column; 
+		flex-flow: column;
+	}
+	header{/*撑开区域*/
+		font-family: 'Yapi';
+		position: relative;
+        height: 35px;
+		line-height: 35px;
+		background: #444;
+		color: #fff;
+		font-size: 16px;
+		text-align: center;
+		padding-top: 25px;
+	}
+	section{
+		-webkit-box-flex: 1; 
+		-webkit-flex: 1; 
+		flex: 1;/*撑开页面*/
+	}
+	footer{
+		display: -webkit-box; 
+		display: -webkit-flex; 
+		display: flex;
+		height: 60px;
+		background-color:rgb(250,250,250);
+	}
+	footer>div {
+		-webkit-box-flex: 1; 
+		-webkit-flex: 1; 
+		flex: 1;
+		width: 100%;
+		color: red; 
+		font-family: 'Yapi';
+		font-size: 12px; 
+		text-align: center;
+		padding-bottom: 6px; 
+		padding-top: 42px;
+		background-color: #3c78d8
+	}
+	footer>div:nth-child(1){
+		background:url(../image/LED_OFF1.png)no-repeat center 6px;
+		background-size:40px 30px;
+	}
+	footer>div:nth-child(2){
+		background:url(../image/connect.png) no-repeat center 6px;
+		background-size: 38px 38px;
+	}
+	footer>div:nth-child(3){
+		background:url(../image/My_OFF1.png) no-repeat center 6px;
+		background-size: 40px 40px;
+	}
+	
+	footer>div:nth-child(1).active{
+		background:url(../image/LED_ON1.png) no-repeat center 6px;
+		background-size: 40px 30px;
+	}
+	footer>div:nth-child(2).active{
+		background:url(../image/connect.png) no-repeat center 6px;
+		background-size: 38px 38px;
+	}	
+	footer>div:nth-child(3).active{
+		background:url(../image/My_ON1.png) no-repeat center 6px;
+		background-size: 40px 40px;
+	}
+					
+	</style>
+</head>
+<body>
+	<header>照明设备控制系统</header>
+	<section></section>
+    <footer>
+    	<div class="active" tapmode="active" onclick="fnSwitchFrame(0);">控制中心</div>
+    	<div tapmode="active" onclick="fnSwitchFrame(1);">连接中心</div>
+    	<div tapmode="active" onclick="fnSwitchFrame(2);">我的</div>
+    </footer>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript" src="../script/APICloud-rest.js"></script>
+<script type="text/javascript">
+	var frameNames = ['control','connect','my'];
+	var header = $api.dom('header');
+	var headerH = $api.offset(header).h;
+	var footer = $api.dom('footer');
+	var footerH = $api.offset(footer).h;
+
+	function fnSwitchFrame(index_){
+		var footer = $api.dom('footer');
+		var footerDivs = $api.domAll(footer,'div');
+		for(var i=0;i<footerDivs.length;i++)
+		{
+			$api.removeCls(footerDivs[i],'active');
+		}
+		$api.addCls(footerDivs[index_],'active');
+	    //切换导航栏时隐藏其他frame，让该显示的frame显示出来
+		for(var i=0;i<frameNames.length;i++){
+			api.setFrameAttr({
+	            name: frameNames[i]+'_frame',
+	            hidden:true
+            });
+		};
+		api.openFrame({
+	        name: frameNames[index_]+'_frame',
+	        url: frameNames[index_]+'_frame.html',
+	        bounces:false,
+	        rect: {
+		        x:0,
+		        y:headerH,
+		        w:'auto',
+		        h:api.winHeight - headerH - footerH
+	        }
+        });
+	}
+
+
+    apiready = function(){
+	    api.addEventListener({
+	        name: 'keyback'
+	    }, function(ret, err) {
+	        if (ret) {
+	            api.closeWidget();
+	        } else {
+	            alert(JSON.stringify(err));
+	        }
+	    });
+
+    	var header = $api.byId('header');
+        $api.fixStatusBar(header);
+    	api.openFrame({
+    	    name: 'my_frame',
+    	    url: 'my_frame.html',
+    	    rect: {
+    	        x: 0,
+    	        y: headerH,
+    	        w: 'auto',
+    	        h: api.winHeight - headerH - footerH
+    	    },
+    	    pageParam: {
+    	        name: 'value'
+    	    },
+    	    bounces: false,
+    	    hScrollBarEnabled: false,
+    	});
+    };
+</script>
+</html>

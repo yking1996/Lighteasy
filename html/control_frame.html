@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>control</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style type="text/css">
+        html,body {
+            width: 100%;
+            height: 100%;
+            background: url(../image/RB2.jpg) no-repeat center center;
+            background-size: 100% 100%;
+        }
+
+        .big {
+            position: absolute;
+            top: 50px;
+            height: 70px;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        .bigg {
+            position: absolute;
+            top: 150px;
+            height: 70px;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        .one {
+            width: 50%;
+            height: 70px;
+            float: left;
+            text-align: center;
+        }
+
+        .two {
+            width: 50%;
+            height: 70px;
+            float: left;
+            text-align: center;
+        }
+
+        .three {
+            width: 50%;
+            height: 70px;
+            float: left;
+            text-align: center;
+        }
+
+        .four {
+            width: 50%;
+            height: 70px;
+            float: left;
+            text-align: center;
+        }
+
+        .LedWord {
+            color: white;
+        }
+       
+    </style>
+</head>
+<body>
+    	<div class="big">
+            <div class="one" tapmode onclick="fnOperate();">
+                <img id="no_1" src="../image/light_off.png" alt="off">
+                <div class="LedWord">灯泡1</div>
+                
+            </div>
+            <div class="two" tapmode onclick="fnOperate1();">
+                <img id="no_2" src="../image/light_off.png" alt="off">
+                <div class="LedWord">灯泡2</div>
+            </div>   
+        </div>
+        <div class="bigg">
+            <div class="three" tapmode onclick="fnOperate2();">
+                <img id="no_3" src="../image/light_off.png" alt="off">
+                <div class="LedWord">灯泡3</div>
+            </div>
+            <div class="four" tapmode onclick="fnOperate3();">
+                <img id="no_4" src="../image/light_off.png" alt="off">
+                <div class="LedWord">灯泡4</div>
+            </div>   
+        </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+            var state = false;
+            function fnOperate() {
+                var no_1 = $api.byId('no_1');
+                if(state){
+                    var address = 'AB:03:56:78:A2:79';    
+                    var spp = api.require("spputil");
+                    spp.send({
+                        address: address,
+                        isHex: false,
+                        sendData: 'close_one',
+                    }, function(ret, err) {
+                        if(ret.status){
+                           no_1.src = '../image/light_off.png';
+                           state = false;
+                        } else {
+                            alert('请先建立连接');
+                        }
+                    })
+                }else{
+                    var address = 'AB:03:56:78:A2:79';    
+                    var spp = api.require("spputil");
+                    spp.send({
+                        address: address,
+                        isHex: false,
+                        sendData: 'open_one',
+                    }, function(ret, err) {
+                        if(ret.status){
+                           no_1.src = '../image/light_on.png';
+                           state = true;
+                        } else {
+                            alert('请先建立连接');
+                        }
+                    })
+                }  
+            };
+
+            function fnOperate1() {
+                var no_2 = $api.byId('no_2');
+                if(state){
+                    var address = 'AB:03:56:78:A2:79';    
+                    var spp = api.require("spputil");
+                    spp.send({
+                        address: address,
+                        isHex: false,
+                        sendData: 'close_two',
+                    }, function(ret, err) {
+                        if(ret.status){
+                            no_2.src = '../image/light_off.png';
+                            state = false;
+                        } else {
+                            alert('请先建立连接');
+                        }
+                    })
+                }else{
+                    var address = 'AB:03:56:78:A2:79';    
+                    var spp = api.require("spputil");
+                    spp.send({
+                        address: address,
+                        isHex: false,
+                        sendData: 'open_two',
+                    }, function(ret, err) {
+                        if(ret.status){
+                            no_2.src = '../image/light_on.png';
+                            state = true;
+                        } else {
+                            alert('请先建立连接');
+                        }
+                    })
+                }  
+            };
+
+            function fnOperate2() {
+                var no_3 = $api.byId('no_3');
+                if(state){
+                    var address = 'AB:03:56:78:A2:79';    
+                    var spp = api.require("spputil");
+                    spp.send({
+                        address: address,
+                        isHex: false,
+                        sendData: 'close_three',
+                    }, function(ret, err) {
+                        if(ret.status){
+                            no_3.src = '../image/light_off.png';
+                            state = false;
+                        } else {
+                            alert('请先建立连接');
+                        }
+                    })
+                }else{
+                    var address = 'AB:03:56:78:A2:79';    
+                    var spp = api.require("spputil");
+                    spp.send({
+                        address: address,
+                        isHex: false,
+                        sendData: 'open_three',
+                    }, function(ret, err) {
+                        if(ret.status){
+                            no_3.src = '../image/light_on.png';
+                            state = true;
+                        } else {
+                            alert('请先建立连接');
+                        }
+                    })
+                }  
+            };
+
+            function fnOperate3() {
+                var no_4 = $api.byId('no_4');
+                if(state){
+                    no_4.src = '../image/light_off.png';
+                    state = false;
+                }else{
+                    no_4.src = '../image/light_on.png';
+                    state = true;
+                }  
+            };
+            
+</script>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>connect</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style type="text/css">
+        /*闪烁动画*/
+        @keyframes shine {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.2;
+            }
+        }
+
+	    @font-face {  
+           font-family: 'Yapi';  
+           src: url(../image/Yapi.ttf)
+        } 
+
+    	html,body {
+            width: 100%;
+            height: 100%;
+            background: url(../image/blacknight.jpg) no-repeat center center;
+            background-size: 100% 100%;
+        }
+
+    	.rotate-static {
+    		top: 50%;
+    		left: 50%;
+            position: absolute;
+            text-align: center;
+            width: 200px;
+            margin-left: -100px;
+            margin-top: -63px;    
+        }
+
+        .tipword {
+            color: #fff;
+            animation: shine 1.5s infinite;
+            font-family: 'Yapi';
+            text-shadow: 0 0 10px #fff, 0 0 20px #fff;
+            margin-top: 15px;
+            font-size: 15px;
+        }
+        
+        .start_word {
+            text-align: center;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.85);
+            font-family: 'Yapi';
+            margin-top: 15px;
+            width: 120px;
+            height: 21px;
+            background-color: rgba(44, 67, 88, 0);
+            border: solid rgba(255, 255, 255, 0.5) 1px;
+            border-radius: 6px;
+            margin-left: 40px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+		<div class="rotate-static">
+            <div tapmpde onclick="fnRun();">
+			    <img id="static" src="../image/rotate-static.png" alt="蓝牙链接" width="105px" height="105px" >
+            </div>
+            <div>
+                <label id="tip" class="tipword">点击按钮打开蓝牙链接</label>
+            </div>
+            <div id="start" class="start_word" tapmode onclick="fnStart();">初始化蓝牙设备</div>
+		</div>
+        
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+            var initstate = false;
+            function fnStart() {
+                var spp = api.require('spputil');
+                var startbutton = $api.byId('start');
+                spp.init(function(ret){
+                    if(ret.status == "poweredOn") {
+                        startbutton.style.display = "none";
+                        alert('蓝牙服务已成功初始化');
+                        initstate = true;
+                        } else if (ret.status == "poweredOff") {
+                            alert('蓝牙未打开，请启用蓝牙设备');
+                        } else{
+                            alert('错误，蓝牙服务未能初始化，错误代码：' + ret.status)
+                        }    
+                });
+            };
+
+            var state = false;
+        	function fnRun() {
+        		var static = $api.byId('static');
+                var tip = $api.byId('tip');
+                var spp = api.require('spputil');
+                var address = 'AB:03:56:78:A2:79';
+                if (initstate) {
+                    if(state) {
+                        static.src = '../image/rotate-static.png';
+                        state = false;
+                        tip.innerHTML = '点击打开蓝牙链接';
+                        spp.disconnect({
+                            address: address
+                        }, function(ret, err) {
+                            alert("断开蓝牙设备成功");
+                        });
+                    }else {
+                        static.src = '../image/rotate.gif';
+                        state = true;
+                        tip.innerHTML = '点击断开蓝牙链接';
+                        spp.connect({
+                        address: address
+                    }, function(ret, err) {
+                        if (ret.status) {
+                             alert("连接蓝牙设备成功");
+                             var device = JSON.parse(ret.device);
+                        } else {
+                            alert("连接蓝牙设备失败：" + err.msg);
+                        }
+                        });
+                    }
+                } else {
+                    alert('请先初始化蓝牙服务');
+                }
+        	};
+
+</script>
+</html>

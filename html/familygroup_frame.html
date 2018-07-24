@@ -1,0 +1,191 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <title>familygroup_frame</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <style>
+            html {
+                height: 100%;
+                background-color: transparent;
+            }
+            
+            body {
+                background-color: #f0f0f0;
+            }
+
+            .manage {
+                width: 100%;
+                background: #f0f0f0;
+                position: absolute;
+                left: 0px;
+                bottom: 10px;
+            }
+
+            .btn {
+                margin: 3px 10px;
+                background: #4169E1;
+                height: 40px;
+                line-height: 40px;
+                text-align: center;
+                font-size: 20px;
+                margin-top: 20px;
+                border-radius: 5px;
+                color: #fff;
+            }
+            
+            .tip {
+                text-align: center;
+                height: 30px;
+                margin-top: 10px;
+            }
+            
+            .word {
+                text-indent: 2em;
+            }
+
+            .highlight {
+                opacity: 0.7;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="tip">说明</div>
+        <div class="word">
+            家庭组能使超级用户添加自己信任的用户为管理员，从而能正常登录系统使用，但管理员无法添加新的管理员，也不能删除现有的管理员，添加和删除操作只有超级用户才能执行。另：超级用户删除管理员时，并不会将用户删除，只是下调了用户的权限。
+        </div>
+        <div class="manage">
+            <div class="btn" tapmode="highlight" onclick="fnAdd();">添加管理员</div>
+            <div class="btn" tapmode="highlight" onclick="fnReduce();">删除管理员</div>
+        </div>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/SHA1.js"></script>
+    <script type="text/javascript" src="../script/remotedb.js"></script>
+    <script type="text/javascript" src="../script/APICloud-rest.js"></script>
+    <script type="text/javascript">
+         
+        function fnReduce() {
+            var appId = 'A6069255791459';
+            var appKey = '74DB56FD-0FD0-977C-C1F7-F8D26E08F439';
+            var client = new Resource(appId, appKey);
+            var userInfo = $api.getStorage('userInfo');
+            var User= client.Factory("user");
+            var model = api.require("model");
+            var query = api.require('query');
+            var userID;
+
+            User.get({
+              "_id": userInfo.userId
+            },function(ret,err){
+            rank = ret.rank;
+            if(rank == 0) {
+                api.prompt({
+                title: '删除管理员',
+                msg: '请输入想删除的用户的邮箱帐号',
+                buttons: ['确定', '取消']
+            }, function(ret, err) {
+                var index = ret.buttonIndex;
+                var text = ret.text;
+                if(index == 1) {
+                    //依靠email字段查询用户ID
+                    query.createQuery(function (ret, err) {
+                    if (ret && ret.qid) {
+                        query.whereEqual({
+                            qid: ret.qid,
+                            column: 'email',
+                            value: text
+                        });
+                          model.findAll({
+                            class: "user",
+                            qid:  ret.qid
+                        }, function(ret, err) {
+                            userID = ret[0].id;
+                            //通过ID修改rank
+                            User.save({
+                              "_id": userID
+                            },{
+                              "rank": "2",
+                              "_method": "PUT"
+                            },function(ret,err){
+                                if(err) {
+                                    alert('出现错误，请重试');
+                                }else {
+                                alert('操作已执行');
+                                }
+                            });
+                        });
+                      }  
+                  });
+                }
+            });
+            }else {
+                alert('权限不足，请联系超级用户');
+            }
+        });  
+     };
+
+        function fnAdd() {
+            var appId = 'A6069255791459';
+            var appKey = '74DB56FD-0FD0-977C-C1F7-F8D26E08F439';
+            var client = new Resource(appId, appKey);
+            var userInfo = $api.getStorage('userInfo');
+            var User= client.Factory("user");
+            var model = api.require("model");
+            var query = api.require('query');
+            var userID;
+
+            User.get({
+              "_id": userInfo.userId
+            },function(ret,err){
+            rank = ret.rank;
+            if(rank == 0) {
+                api.prompt({
+                title: '添加管理员',
+                msg: '请输入想添加的用户的邮箱帐号',
+                buttons: ['确定', '取消']
+            }, function(ret, err) {
+                var index = ret.buttonIndex;
+                var text = ret.text;
+                if(index == 1) {
+                    //依靠email字段查询用户ID
+                    query.createQuery(function (ret, err) {
+                    if (ret && ret.qid) {
+                        query.whereEqual({
+                            qid: ret.qid,
+                            column: 'email',
+                            value: text
+                        });
+                          model.findAll({
+                            class: "user",
+                            qid:  ret.qid
+                        }, function(ret, err) {
+                            userID = ret[0].id;
+                            //通过ID修改rank
+                            User.save({
+                              "_id": userID
+                            },{
+                              "rank": "1",
+                              "_method": "PUT"
+                            },function(ret,err){
+                                if(err) {
+                                    alert('出现错误，请重试');
+                                }else {
+                                alert('操作已执行');
+                                }
+                            });
+                        });
+                      }  
+                  });
+                }
+            });
+            }else {
+                alert('权限不足，请联系超级用户');
+            }
+        });  
+     };
+    </script>
+</html>

@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <title>My</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <style>
+            html,
+            body {
+                height: 100%;
+                background-color: #f0f0f0;
+            }
+            
+            .h10 {
+                height: 10px;
+                background: #f0f0f0;
+            }
+            
+            .h1 {
+                height: 1px;
+                margin-left: 15px;
+                background: #f0f0f0;
+            }
+            
+            .fr {
+                float: right;
+            }
+            
+            .hint {
+                color: #666;
+                font-size: 12px;
+                margin-right: 5px;
+            }
+            
+            .firstblock,
+            .secondblock,
+            .thirdblock {
+                background-color: #fff;
+            }
+            
+            .login {
+                background-image: url(../image/my/personal_bkg2.jpg);
+                background-repeat: no-repeat;
+                background-size: contain;
+                position: relative;
+            }
+            
+            .loginbg {
+                width: 100%;
+            }
+            
+            .login .personal_logo {
+                position: absolute;
+                top: 60px;
+                width: 64px;
+                height: 64px;
+                border-radius: 32px;
+                left: 20px;
+            }
+            
+            .person_arrow {
+                position: absolute;
+                height: 20px;
+                right: 10px;
+                top: 90px;
+            }
+            
+            .login .userinfo {
+                position: absolute;
+                top: 60px;
+                margin-left: 100px;
+            }
+            
+            .login .userinfo .title {
+                font-size: 20px;
+                color: #fff;
+            }
+            
+            .login .userinfo .subtitle {
+                font-size: 14px;
+                color: #fff;
+                border: 1px solid #fff;
+                display: inline-block;
+                padding: 3px;
+                border-radius: 4px;
+                margin-top: 5px;
+            }
+            
+            .item {
+                height: 50px;
+                line-height: 50px;
+                padding-left: 15px;
+                background-color: #fff;
+            }
+            
+            .item_ico {
+                float: left;
+                width: 30px;
+                padding: 10px 10px 10px 0;
+            }
+            
+            .item_arrow {
+                float: right;
+                width: 16px;
+                padding: 17px 15px 15px 0;
+            }
+            
+            .item-hov {
+                background-color: #E8E8E8;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="login" tapmode onclick="fnCheckLogin();">
+            <img src="../image/my/personal_bkg2.jpg" class="loginbg">
+            <img id="userAvatar" src="../image/defaulthead.jpg" class="personal_logo">
+            <div class="userinfo">
+                <div id="userAccount" class="title">用户</div>
+            </div>
+            <img src="../image/my/personal_icon_arrow.png" class="person_arrow">
+        </div>
+        <div class="h10"></div>
+        <div class="secondblock">
+            <div class="item" tapmode onclick="fnOpenFamilyGroupWin();">
+                <img src="../image/my/family.png" class="item_ico">
+                <span>家庭组</span>
+                <img src="../image/arrow.png" class="item_arrow">
+            </div>
+            <div class="h1"></div>
+            <div class="item" tapmode onclick="fnOpenHelpWin();">
+                <img src="../image/my/help.png" class="item_ico">
+                <span>帮助中心</span>
+                <img src="../image/arrow.png" class="item_arrow">
+            </div>
+            <div class="h1"></div>
+        </div>
+        <div class="h10"></div>
+        <div class="thirdblock">
+            <div class="h1"></div>
+            <div class="item" tapmode onclick="fnOpenSettingWin();">
+                <img src="../image/my/setting.png" class="item_ico">
+                <span>建议与反馈</span>
+                <img src="../image/arrow.png" class="item_arrow">
+            </div>
+        </div>
+        <div class="h10"></div>
+        <div class="h10"></div>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript">
+        function fnOpenFamilyGroupWin() {
+            api.openWin({
+                name: 'familygroup',
+                url: 'familygroup.html',
+                pageParam: {
+                    key:' '
+                }
+            });
+        }
+
+        function fnOpenHelpWin() {
+            api.openWin({
+                name: 'help',
+                url: 'https://www.apicloud.com/about',
+                pageParam: {
+                    key:' '
+                }
+            });
+        }
+
+        function fnOpenSettingWin() {
+            api.openWin({
+                name: 'setting',
+                url: 'setting.html',
+                pageParam: {
+                    key:' '
+                }
+            });
+        }
+
+        function fnUpdateUserInfo() {
+            var userInfo = $api.getStorage('userInfo');
+            if(userInfo){//如果有个人信息
+                var userAvatar = $api.byId('userAvatar');
+                var userAccount = $api.byId('userAccount');//$多打了一个
+                if(userInfo.avatar){//如果有头像
+                    userAvatar.src = userInfo.avatar;
+                }
+                if(userInfo.account){
+                    userAccount.innerHTML = userInfo.account;//忘记添加innerHTML
+                }
+            }
+        }
+
+        function fnResetUserInfo() {
+                var userAvatar = $api.byId('userAvatar');
+                var userAccount = $api.byId('userAccount');
+                userAvatar.src = '../image/defaulthead.jpg';
+                userAccount.innerHTML = '用户';
+        }
+
+        
+
+        function fnCheckLogin() {
+            // $api.rmStorage('userInfo');
+            var userInfo= $api.getStorage('userInfo');
+            if(userInfo && userInfo.accessToken){
+                //进入个人中心，否则打开登录界面
+                api.openWin({
+                    name: 'person_info',
+                    url: 'person_info.html',
+                    pageParam: {
+                        key: ''
+                    }
+                });
+            }else{
+                api.openWin({
+                    name: 'login',
+                    url: 'login.html',
+                    bounces:false,
+                    pageParam: {
+                        key: ''
+                    }
+                });
+            }
+            api.addEventListener({
+                name: 'setuserinfo'
+            }, function(ret, err) {
+                fnUpdateUserInfo();
+            });
+            api.addEventListener({
+                name: 'logout'
+            }, function(ret, err) {
+                fnResetUserInfo();
+            });
+        }
+        apiready = function() {
+            fnUpdateUserInfo();//登陆时直接获取本地数据，若有本地数据，则自动更新个人资料
+        };
+    </script>
+
+</html>
